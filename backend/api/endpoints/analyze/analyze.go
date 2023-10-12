@@ -27,7 +27,12 @@ func (h *AnalyzeNginxConfigEndpointHandler) ServeHTTP(writer http.ResponseWriter
 
 	//Domain logic
 	response := Response{
-		Explanation: map[int]string{0: "Hello, World!"},
+		Explanation: map[int]string{
+			1: "Server listens on port 80",
+			2: "Server matches on hosts: domain2.com www.domain2.com",
+			4: "case sensitive regex match for location: ^/(images|javascript|js|css|flash|media|static)/",
+			8: "prefix match for location: /",
+		},
 	}
 
 	writer.WriteHeader(http.StatusOK)
