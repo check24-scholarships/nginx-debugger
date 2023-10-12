@@ -1,5 +1,7 @@
 package analyze
 
+import "nginx_debugger/explain"
+
 type Response struct {
-	Explanation map[int]string
+	Explanation explain.Explanation
 }

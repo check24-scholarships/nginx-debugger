@@ -3,11 +3,10 @@ package explain
 import (
 	"fmt"
 	"nginx_debugger/abstractNginxConfig"
-	"nginx_debugger/api/endpoints/analyze"
 	"strings"
 )
 
-func ExplainNginxConfig(abstractConfig abstractNginxConfig.AbstractNginxConfig) analyze.Response {
+func ExplainNginxConfig(abstractConfig abstractNginxConfig.AbstractNginxConfig) Explanation {
 	explanation := make(map[int]string)
 
 	for _, serverBlock := range abstractConfig.ServerBlocks {
@@ -24,9 +23,7 @@ func ExplainNginxConfig(abstractConfig abstractNginxConfig.AbstractNginxConfig) 
 		}
 	}
 
-	return analyze.Response{
-		Explanation: explanation,
-	}
+	return explanation
 }
 
 func explainDirective(directive abstractNginxConfig.Directive) string {
