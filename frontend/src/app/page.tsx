@@ -16,7 +16,7 @@ export default function Home() {
 			<Tabs>
 				<TabList>
 					<Tab>Explanation</Tab>
-					<Tab>Requets</Tab>
+					<Tab>Requests</Tab>
 				</TabList>
 				<TabPanels>
 					<TabPanel>WIP</TabPanel>

@@ -1,6 +1,5 @@
 // app/layout.tsx
 import { Providers } from "./providers";
-import "./globals.css";
 import React from "react";
 import { Box } from "@chakra-ui/react";
 
