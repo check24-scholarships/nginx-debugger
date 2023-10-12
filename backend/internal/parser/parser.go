@@ -2,10 +2,12 @@ package parser
 
 import (
 	"errors"
+	"fmt"
 	conf "nginx_debugger/abstractNginxConfig"
 )
 
 const (
+	TokenNewLine      = '\n'
 	TokenSpace        = ' '
 	TokenBracketOpen  = '{'
 	TokenBracketClose = '}'
@@ -25,29 +27,37 @@ func NewLexer(tape string) *Lexer {
 	}
 }
 
-func (l *Lexer) nextToken() string {
+func (l *Lexer) NextToken() string {
+
 	currToken := ""
-	end := 0
 
-loop:
-	for i, c := range l.tape {
-		end = i
-
+	for l.tape != "" {
+		c := l.tape[0]
 		switch c {
+		case TokenNewLine:
+			fallthrough
 		case TokenSpace:
-			continue
+			if len(currToken) == 0 {
+				l.tape = l.tape[1:]
+			} else {
+				return currToken
+			}
 		case TokenBracketOpen:
+			fallthrough
 		case TokenBracketClose:
+			fallthrough
 		case TokenSemicolon:
-
-			currToken = string(l.tape[i])
-			break loop
+			if len(currToken) == 0 {
+				l.tape = l.tape[1:]
+				return string(c)
+			} else {
+				return currToken
+			}
 		default:
-			currToken += string(l.tape[i])
+			currToken += string(c)
+			l.tape = l.tape[1:]
 		}
 	}
-
-	l.tape = l.tape[:end]
 
 	return currToken
 }
@@ -56,7 +66,7 @@ func (l *Lexer) lex() []string {
 	var tokens []string
 
 	for len(l.tape) != 0 {
-		token := l.nextToken()
+		token := l.NextToken()
 
 		tokens = append(tokens, token)
 	}
@@ -103,7 +113,7 @@ func (p *Parser) ParseServerBlock() (*conf.ServerBlock, error) {
 
 	braceToken := p.popToken()
 	if braceToken != string(TokenBracketOpen) {
-		return nil, errors.New("expected opening brace")
+		return nil, errors.New(fmt.Sprintf("expected opening brace, received %s", braceToken))
 	}
 
 	var locationBlocks []conf.LocationBlock
@@ -143,8 +153,9 @@ func (p *Parser) ParseDirective() (*conf.Directive, error) {
 
 	value := p.popToken()
 
-	if p.popToken() == string(TokenSemicolon) {
-		return nil, errors.New("expected token semicolon")
+	semicolonToken := p.popToken()
+	if semicolonToken != string(TokenSemicolon) {
+		return nil, errors.New(fmt.Sprintf("expected opening brace, received %s", semicolonToken))
 	}
 
 	return &conf.Directive{
