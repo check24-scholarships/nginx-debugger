@@ -1,19 +1,21 @@
 package abstractNginxConfig
 
+import "errors"
+
 type AbstractNginxConfig struct {
-	serverBlocks []ServerBlock
+	ServerBlocks []ServerBlock
 }
 
 type ServerBlock struct {
-	directives     []Directive[string]
-	locationBlocks []LocationBlock
+	Directives     []Directive
+	LocationBlocks []LocationBlock
 }
 
 type LocationBlock struct {
-	line          int
-	matchModifier LocationMatchModifier
-	locationMatch string
-	directives    []Directive[string]
+	Line          int
+	MatchModifier LocationMatchModifier
+	LocationMatch string
+	Directives    []Directive
 }
 
 type LocationMatchModifier string
@@ -27,6 +29,16 @@ const (
 
 type DirectiveKey string
 
+func DirectiveFromToken(token string) (*DirectiveKey, error) {
+	for _, d := range DirectiveKeys {
+		if string(d) == token {
+			return &d, nil
+		}
+	}
+
+	return nil, errors.New("directive key not found")
+}
+
 const (
 	DirectiveKeyListen     = DirectiveKey("listen")
 	DirectiveKeyServerName = DirectiveKey("server_name")
@@ -34,8 +46,15 @@ const (
 	DirectiveKeyProxyPass  = DirectiveKey("proxy_pass")
 )
 
-type Directive[T any] struct {
-	line  int
-	key   DirectiveKey
-	value T
+var DirectiveKeys = []DirectiveKey{
+	DirectiveKeyListen,
+	DirectiveKeyServerName,
+	DirectiveKeyRoot,
+	DirectiveKeyProxyPass,
+}
+
+type Directive struct {
+	Line  int
+	Key   DirectiveKey
+	Value string
 }
