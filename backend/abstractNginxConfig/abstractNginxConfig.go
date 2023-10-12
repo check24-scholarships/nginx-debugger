@@ -21,10 +21,11 @@ type LocationBlock struct {
 type LocationMatchModifier string
 
 const (
-	NoneMatchModifier          = LocationMatchModifier("")
-	ExactMatchModifier         = LocationMatchModifier("=")
-	CaseSensitiveMatchModifier = LocationMatchModifier("~")
-	BestNonRegexMatchModifier  = LocationMatchModifier("^~")
+	NoneMatchModifier                 = LocationMatchModifier("")
+	ExactMatchModifier                = LocationMatchModifier("=")
+	CaseSensitiveRegexMatchModifier   = LocationMatchModifier("~")
+	CaseInsensitiveRegexMatchModifier = LocationMatchModifier("~*")
+	BestNonRegexMatchModifier         = LocationMatchModifier("^~")
 )
 
 type DirectiveKey string
