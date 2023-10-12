@@ -1,3 +1,5 @@
+"use client";
+
 import {
 	Grid,
 	GridItem,
@@ -8,11 +10,14 @@ import {
 	Tabs,
 } from "@chakra-ui/react";
 import RequestTab from "@components/organisms/RequestTab";
+import Editor from "../components/organisms/Editor";
 
 export default function Home() {
 	return (
-		<Grid templateColumns="repeat(2, 1fr)" gap={6}>
-			<GridItem>Config view</GridItem>
+		<Grid templateColumns="repeat(2, 1fr)" gap={6} height="100vh">
+			<GridItem>
+				<Editor onSave={(v) => console.log(v)}></Editor>
+			</GridItem>
 			<Tabs>
 				<TabList>
 					<Tab>Explanation</Tab>
