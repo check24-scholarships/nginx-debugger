@@ -43,6 +43,7 @@ export default function Select<T>({
 						width="max-content"
 						align="flex-start"
 						borderRadius="lg"
+						backgroundColor="white"
 						padding={2}
 						spacing={2}
 						marginTop={2}>
