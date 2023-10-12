@@ -1,7 +1,7 @@
 "use client";
 import {
-	Grid,
-	GridItem,
+	Box,
+	Stack,
 	Tab,
 	TabList,
 	TabPanel,
@@ -12,23 +12,24 @@ import RequestTab from "@components/organisms/RequestTab";
 import Editor from "../components/organisms/Editor";
 import { usePostRequest } from "@lib/request/clientRequest";
 import ExplanationTab from "@components/organisms/ExplanationTab";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 
 export default function Home() {
-	const { data, send } = usePostRequest<ExplanationResponse>(
-		"http://localhost:9000/analyze",
-	);
+	const { data, send } =
+		usePostRequest<ExplanationResponse>("api/mock/analyze");
 
 	useEffect(() => {
 		send({ config: "some data" });
 	}, []);
 
+	console.log(data);
+
 	return (
-		<Grid templateColumns="repeat(2, 1fr)" gap={6} height="100vh">
-			<GridItem>
+		<Stack direction="row" gap={6} height="100vh">
+			<Box width="50%">
 				<Editor onSave={(v) => console.log(v)}></Editor>
-			</GridItem>
-			<Tabs>
+			</Box>
+			<Tabs variant="solid-rounded">
 				<TabList>
 					<Tab>Explanation</Tab>
 					<Tab>Requests</Tab>
@@ -42,6 +43,6 @@ export default function Home() {
 					</TabPanel>
 				</TabPanels>
 			</Tabs>
-		</Grid>
+		</Stack>
 	);
 }

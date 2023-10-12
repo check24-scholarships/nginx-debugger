@@ -17,14 +17,14 @@ export default function RequestTab() {
 				<SelectRequestMethod onSelect={() => {}} />
 				<Button>SEND</Button>
 			</Stack>
-			<Tabs>
+			<Tabs variant="soft-rounded">
 				<TabList>
 					<Tab>Headers</Tab>
 					<Tab>Body</Tab>
 				</TabList>
 				<TabPanels>
 					<TabPanel>WIP</TabPanel>
-					<TabPanel></TabPanel>
+					<TabPanel>Body</TabPanel>
 				</TabPanels>
 			</Tabs>
 		</Stack>

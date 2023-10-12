@@ -52,6 +52,8 @@ export default function Select<T>({
 								key={`${value}`}
 								padding={1.5}
 								borderRadius="md"
+								width="full"
+								textAlign="start"
 								color="black"
 								onClick={() => select(value)}
 								_hover={{
