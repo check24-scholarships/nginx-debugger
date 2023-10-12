@@ -2,6 +2,7 @@
 import { Providers } from "./providers";
 import "./globals.css";
 import React from "react";
+import { Box } from "@chakra-ui/react";
 
 export default function RootLayout({
 	children,
@@ -11,7 +12,11 @@ export default function RootLayout({
 	return (
 		<html lang="en">
 			<body>
-				<Providers>{children}</Providers>
+				<Providers>
+					<Box height="100vh" overflow="hidden">
+						{children}
+					</Box>
+				</Providers>
 			</body>
 		</html>
 	);
