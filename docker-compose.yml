@@ -4,7 +4,7 @@ networks:
   nginx-debugger:
 
 services:
-  nginx-debugger:
+  backend:
     image: golang:1.21
     volumes:
       - "./:/src"
@@ -13,3 +13,12 @@ services:
     command: go run cmd/main.go
     ports:
       - "9000:9000"
+  frontend:
+    build:
+      context: ./frontend
+    volumes:
+      - ./frontend:/app
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: development

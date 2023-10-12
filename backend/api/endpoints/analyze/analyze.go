@@ -2,7 +2,11 @@ package analyze
 
 import (
 	"encoding/json"
+	"fmt"
+	"io"
 	"net/http"
+	"nginx_debugger/explain"
+	"nginx_debugger/internal/parser"
 )
 
 type AnalyzeNginxConfigEndpointHandler struct {
@@ -18,24 +22,23 @@ func (h *AnalyzeNginxConfigEndpointHandler) ServeHTTP(writer http.ResponseWriter
 		return
 	}
 
-	var domainRequest Request
-	err := json.NewDecoder(request.Body).Decode(&domainRequest)
+	bytes, err := io.ReadAll(request.Body)
 	if err != nil {
 		http.Error(writer, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	//Domain logic
-	response := Response{
-		Explanation: map[int]string{
-			1: "Server listens on port 80",
-			2: "Server matches on hosts: domain2.com www.domain2.com",
-			4: "case sensitive regex match for location: ^/(images|javascript|js|css|flash|media|static)/",
-			8: "prefix match for location: /",
-		},
+	rawCfg := string(bytes)
+	configParser := parser.NewParser(rawCfg)
+	parsedCfg, err := configParser.Parse()
+	if err != nil {
+		http.Error(writer, fmt.Sprintf("parser error: %s", err.Error()), http.StatusInternalServerError)
+		return
 	}
+
+	domainResponse := explain.ExplainNginxConfig(*parsedCfg)
 
 	writer.WriteHeader(http.StatusOK)
 	writer.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(writer).Encode(response)
+	json.NewEncoder(writer).Encode(domainResponse)
 }
