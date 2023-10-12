@@ -1,0 +1,15 @@
+version: '3.9'
+
+networks:
+  nginx-debugger:
+
+services:
+  nginx-debugger:
+    image: golang:1.21
+    volumes:
+      - "./:/src"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    working_dir: "/src/backend"
+    command: go run cmd/main.go
+    ports:
+      - "9000:9000"
