@@ -20,6 +20,16 @@ type LocationBlock struct {
 
 type LocationMatchModifier string
 
+func LocationMatchModifierFromToken(token string) (*LocationMatchModifier, error) {
+	for _, m := range LocationMatchModifiers {
+		if string(m) == token {
+			return &m, nil
+		}
+	}
+
+	return nil, errors.New("location match modifier not found")
+}
+
 const (
 	NoneMatchModifier                 = LocationMatchModifier("")
 	ExactMatchModifier                = LocationMatchModifier("=")
@@ -27,6 +37,14 @@ const (
 	CaseInsensitiveRegexMatchModifier = LocationMatchModifier("~*")
 	BestNonRegexMatchModifier         = LocationMatchModifier("^~")
 )
+
+var LocationMatchModifiers = []LocationMatchModifier{
+	NoneMatchModifier,
+	ExactMatchModifier,
+	CaseSensitiveRegexMatchModifier,
+	CaseInsensitiveRegexMatchModifier,
+	BestNonRegexMatchModifier,
+}
 
 type DirectiveKey string
 

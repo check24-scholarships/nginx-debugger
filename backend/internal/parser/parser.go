@@ -165,9 +165,20 @@ func (p *Parser) ParseDirective() (*conf.Directive, error) {
 }
 
 func (p *Parser) ParseLocationBlock() (*conf.LocationBlock, error) {
-	serverToken := p.popToken()
-	if serverToken != TokenLocation {
+	locationToken := p.popToken()
+	if locationToken != TokenLocation {
 		return nil, errors.New("expected token location")
+	}
+
+	var matchModifier conf.LocationMatchModifier
+
+	locationMatch := p.popToken()
+	parsedMatchModifier, err := conf.LocationMatchModifierFromToken(locationMatch)
+	if err != nil {
+		matchModifier = conf.NoneMatchModifier
+	} else {
+		matchModifier = *parsedMatchModifier
+		locationMatch = p.popToken()
 	}
 
 	braceToken := p.popToken()
@@ -188,7 +199,9 @@ func (p *Parser) ParseLocationBlock() (*conf.LocationBlock, error) {
 	p.popToken()
 
 	return &conf.LocationBlock{
-		Directives: directives,
+		Directives:    directives,
+		MatchModifier: matchModifier,
+		LocationMatch: locationMatch,
 	}, nil
 }
 

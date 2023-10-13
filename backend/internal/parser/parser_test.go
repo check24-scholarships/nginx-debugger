@@ -56,3 +56,14 @@ func TestParser_Parse_Directive(t *testing.T) {
 	assert.Equal(t, abstractNginxConfig.DirectiveKeyProxyPass, config.ServerBlocks[0].Directives[1].Key)
 	assert.Equal(t, "lol", config.ServerBlocks[0].Directives[1].Value)
 }
+
+func TestParser_Parse_Location_Block(t *testing.T) {
+	parser := NewParser("server { location / { proxy_pass http://127.0.0.1:8080; } }")
+	config, err := parser.Parse()
+
+	assert.Nil(t, err)
+	assert.Len(t, config.ServerBlocks, 1)
+	assert.Len(t, config.ServerBlocks[0].LocationBlocks, 1)
+	assert.Equal(t, "/", config.ServerBlocks[0].LocationBlocks[0].LocationMatch)
+	assert.Equal(t, abstractNginxConfig.NoneMatchModifier, config.ServerBlocks[0].LocationBlocks[0].MatchModifier)
+}
